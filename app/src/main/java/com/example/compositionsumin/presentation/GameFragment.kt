@@ -13,6 +13,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.*
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.compositionsumin.R
 import com.example.compositionsumin.databinding.FragmentGameBinding
 import com.example.compositionsumin.domain.entity.GameResult
@@ -21,12 +23,19 @@ import com.example.compositionsumin.domain.entity.Level
 
 class GameFragment : Fragment() {
     private lateinit var gameResult: GameResult
-    private lateinit var level: Level
+//    private lateinit var level: Level
+//вариант 1 получения аргументов
+private val args by navArgs<GameFragmentArgs>()
 
+private val viewModelFactory by lazy {
+    //вариант 1 получения аргументов
+//    val args = GameFragmentArgs.fromBundle(requireArguments())
+    GameViewFactory(requireActivity().application,args.level)
+}
 
-    private val viewModel: GameViewModel by lazy {
+        private val viewModel: GameViewModel by lazy {
         ViewModelProvider(
-            this, GameViewFactory(requireActivity().application,level)
+            this, viewModelFactory
         )[GameViewModel::class.java]
     }
 
@@ -44,11 +53,11 @@ class GameFragment : Fragment() {
     private val binding: FragmentGameBinding
         get() = _binding ?: throw RuntimeException("FragmentGameBinding == null")
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        parsArgs()
-
-    }
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        parsArgs()
+//
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -119,20 +128,27 @@ class GameFragment : Fragment() {
     }
 
     private fun launchGameFinishedFragment(gameResult: GameResult) {
+       findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameFinishedFragment(gameResult))
+
+//        val args = Bundle().apply {
+//           putParcelable(GameFinishedFragment.KEY_RESULT_GAME,gameResult)
+//       }
+//        findNavController().navigate(R.id.gameFinishedFragment,args)
+
         //Log.d("launchGameFinishedFragment","gameResult $gameResult")
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container, GameFinishedFragment.newInstance(gameResult))
-            .addToBackStack(null) 
-            .commit()
+//        requireActivity().supportFragmentManager.beginTransaction()
+//            .replace(R.id.main_container, GameFinishedFragment.newInstance(gameResult))
+//            .addToBackStack(null)
+//            .commit()
     }
 
-    private fun parsArgs() {
-        level = requireArguments().getParcelable<Level>(KEY_LEVEL) as Level
-        //второй вариант через let
-        requireArguments().getParcelable<Level>(KEY_LEVEL)?.let {
-            level = it
-        }
-    }
+//    private fun parsArgs() {
+//        level = requireArguments().getParcelable<Level>(KEY_LEVEL) as Level
+//        //второй вариант через let
+//        requireArguments().getParcelable<Level>(KEY_LEVEL)?.let {
+//            level = it
+//        }
+//    }
 
     private fun getColorByState(goodState: Boolean): Int {
         val colorResId = if (goodState) {
@@ -148,22 +164,26 @@ class GameFragment : Fragment() {
         _binding = null
     }
 
-    companion object {
-        const val NAME_LEVEL = "GameFragment"
-        const val KEY_LEVEL = "level"
-        fun newInstance(level: Level): GameFragment {
-// более длиинное и понятное описание
+//    companion object {
+//        const val NAME_LEVEL = "GameFragment"
+//        val KEY_LEVEL = "level"
+//        fun newInstance(level: Level): GameFragment {
+//        }
+//        }
+
+
+    // более длиинное и понятное описание
 //            val args = Bundle()
 //            args.putSerializable(KEY_LEVEL,level)
 //            val fragment= GameFragment()
 //            fragment.arguments =args
 //            return fragment
 
-            return GameFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable(KEY_LEVEL, level)
-                }
-            }
-        }
-    }
+//            return GameFragment().apply {
+//                arguments = Bundle().apply {
+//                    putParcelable(KEY_LEVEL, level)
+//                }
+//            }
+//        }
+//    }
 }

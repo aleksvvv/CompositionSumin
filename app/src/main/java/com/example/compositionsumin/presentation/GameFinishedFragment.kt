@@ -2,12 +2,15 @@ package com.example.compositionsumin.presentation
 
 import android.opengl.Visibility
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.FragmentManager
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.compositionsumin.R
 import com.example.compositionsumin.databinding.FragmentGameBinding
 import com.example.compositionsumin.databinding.FragmentGameFinishedBinding
@@ -20,9 +23,13 @@ class GameFinishedFragment : Fragment() {
     private val binding: FragmentGameFinishedBinding
         get() = _binding ?: throw RuntimeException("FragmentGameBinding == null")
 
+    private val args by navArgs<GameFinishedFragmentArgs>()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         parseResultGame()
+
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,6 +51,7 @@ class GameFinishedFragment : Fragment() {
 //                    retryGame()
 //                }
 //            })
+
         //второй вариант написания
         val callback =object : OnBackPressedCallback(true){
                         override fun handleOnBackPressed() {
@@ -54,6 +62,7 @@ class GameFinishedFragment : Fragment() {
             .addCallback(viewLifecycleOwner,callback)
 
         binding.buttonRetry.setOnClickListener{
+//            Log.d("buttonRetry","buttonRetry")
             retryGame()
         }
         binding.emojiResult.setImageResource(getSmileResId())
@@ -82,16 +91,20 @@ class GameFinishedFragment : Fragment() {
         }
     }
     private fun retryGame(){
-        requireActivity().supportFragmentManager
-            //переходим к GameFragment и удаляем его из стека, т.е. встаем перед ним
-            .popBackStack(GameFragment.NAME_LEVEL,FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        findNavController().popBackStack()
+
+
+//        requireActivity().supportFragmentManager
+//            //переходим к GameFragment и удаляем его из стека, т.е. встаем перед ним
+//            .popBackStack(GameFragment.NAME_LEVEL,FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
     private fun parseResultGame(){
 //        resultGame = requireArguments().getParcelable<GameResult>(KEY_RESULT_GAME) as GameResult
 //второй вариант через let
-         requireArguments().getParcelable<GameResult>(KEY_RESULT_GAME)?.let {
-           resultGame = it
-        }
+resultGame = args.gameResult
+//         requireArguments().getParcelable<GameResult>(KEY_RESULT_GAME)?.let {
+//           resultGame = it
+//        }
     }
     private fun getPercentOfRightAnswers() = with(resultGame) {
         if (countOfQuestions == 0) {
@@ -104,14 +117,15 @@ class GameFinishedFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-    companion object{
-        const val KEY_RESULT_GAME = "result"
-        fun newInstance(game: GameResult): GameFinishedFragment{
-            val args = Bundle()
-            args.putParcelable(KEY_RESULT_GAME,game)
-            val fragment = GameFinishedFragment()
-            fragment.arguments = args
-            return fragment
-        }
-    }
+//  не нужно при навигэйшион
+//    companion object{
+//        const val KEY_RESULT_GAME = "result"
+//        fun newInstance(game: GameResult): GameFinishedFragment{
+//            val args = Bundle()
+//            args.putParcelable(KEY_RESULT_GAME,game)
+//            val fragment = GameFinishedFragment()
+//            fragment.arguments = args
+//            return fragment
+//        }
+//    }
 }

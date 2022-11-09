@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.example.compositionsumin.R
 import com.example.compositionsumin.databinding.FragmentChooseLevelBinding
 import com.example.compositionsumin.domain.entity.Level
@@ -40,20 +41,30 @@ class ChooseLevelFragment : Fragment() {
         }
     }
     private fun launchGame(level: Level){
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container,GameFragment.newInstance(level))
-            .addToBackStack(GameFragment.NAME_LEVEL)
-            .commit()
+
+        findNavController().navigate(ChooseLevelFragmentDirections
+            .actionChooseLevelFragmentToGameFragment(level))
+
+
+//        val args = Bundle().apply {
+//            putParcelable(GameFragment.KEY_LEVEL, level)
+//        }
+//        findNavController().navigate(R.id.action_chooseLevelFragment_to_gameFragment,args)
+
+//        requireActivity().supportFragmentManager.beginTransaction()
+//            .replace(R.id.main_container,GameFragment.newInstance(level))
+//            .addToBackStack(GameFragment.NAME_LEVEL)
+//            .commit()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-    companion object{
-        const val NAME = "ChooseLevelFragment"
-        fun newInstance(): ChooseLevelFragment{
-            return ChooseLevelFragment()
-        }
-    }
+//    companion object{
+//        const val NAME = "ChooseLevelFragment"
+//        fun newInstance(): ChooseLevelFragment{
+//            return ChooseLevelFragment()
+//        }
+//    }
 }

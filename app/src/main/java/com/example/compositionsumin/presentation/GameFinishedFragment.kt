@@ -18,7 +18,7 @@ import com.example.compositionsumin.domain.entity.GameResult
 
 class GameFinishedFragment : Fragment() {
 
-    private lateinit var resultGame:GameResult
+//    private lateinit var resultGame:GameResult
     private var _binding: FragmentGameFinishedBinding? = null
     private val binding: FragmentGameFinishedBinding
         get() = _binding ?: throw RuntimeException("FragmentGameBinding == null")
@@ -26,11 +26,11 @@ class GameFinishedFragment : Fragment() {
     private val args by navArgs<GameFinishedFragmentArgs>()
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        parseResultGame()
-
-    }
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        parseResultGame()
+//
+//    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -65,26 +65,26 @@ class GameFinishedFragment : Fragment() {
 //            Log.d("buttonRetry","buttonRetry")
             retryGame()
         }
-        binding.emojiResult.setImageResource(getSmileResId())
+//        binding.emojiResult.setImageResource(getSmileResId())
+binding.gameResult = args.gameResult
 
-
-        binding.tvRequiredAnswers.text = String.format(getString(R.string.required_score)
-            , resultGame.gameSettings.minCountOfRightAnswers)
-        binding.tvScoreAnswers.text = String.format(
-            getString(R.string.score_answers),
-            resultGame.countOfAnswers
-        )
-        binding.tvRequiredPercentage.text = String.format(
-            getString(R.string.required_percentage),
-            resultGame.gameSettings.minPercentOfRightAnswers
-        )
-        binding.tvScorePercentage.text = String.format(
-            getString(R.string.score_percentage),
-            getPercentOfRightAnswers()
-        )
+//        binding.tvRequiredAnswers.text = String.format(getString(R.string.required_score)
+//            , args.gameResult.gameSettings.minCountOfRightAnswers)
+//        binding.tvScoreAnswers.text = String.format(
+//            getString(R.string.score_answers),
+//            args.gameResult.countOfAnswers
+//        )
+//        binding.tvRequiredPercentage.text = String.format(
+//            getString(R.string.required_percentage),
+//            args.gameResult.gameSettings.minPercentOfRightAnswers
+//        )
+//        binding.tvScorePercentage.text = String.format(
+//            getString(R.string.score_percentage),
+//            getPercentOfRightAnswers()
+//        )
     }
     private fun getSmileResId(): Int {
-        return if (resultGame.winner) {
+        return if (args.gameResult.winner) {
             R.drawable.ic_smile
         } else {
             R.drawable.ic_sad
@@ -100,13 +100,15 @@ class GameFinishedFragment : Fragment() {
     }
     private fun parseResultGame(){
 //        resultGame = requireArguments().getParcelable<GameResult>(KEY_RESULT_GAME) as GameResult
+
 //второй вариант через let
-resultGame = args.gameResult
+//resultGame = args.gameResult
+
 //         requireArguments().getParcelable<GameResult>(KEY_RESULT_GAME)?.let {
 //           resultGame = it
 //        }
     }
-    private fun getPercentOfRightAnswers() = with(resultGame) {
+    private fun getPercentOfRightAnswers() = with(args.gameResult) {
         if (countOfQuestions == 0) {
             0
         } else {
